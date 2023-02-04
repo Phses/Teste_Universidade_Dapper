@@ -1,7 +1,7 @@
 # Teste_Universidade_Dapper
 Crud usando Dapper
 Comandos SQL usados
-```sql
+
 ```sql
 USE Teste
 GO
@@ -60,5 +60,4 @@ GO
 
 ALTER TABLE [Cursos] ALTER COLUMN [DataDeAlteracao] DateTime2
 GO
-```
 ```
