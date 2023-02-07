@@ -7,6 +7,7 @@ namespace Universidade.Domain.Interfaces.Repository
         Task<Endereco> FindAsync(int id);
         Task<IEnumerable<Endereco>> ListAsync();
         Task<int> AddAsync(Endereco endereco);
+        Task AtualizarAsync(Endereco endereco, int id);
         Task DeleteAsync(int id);
     }
 }

@@ -8,9 +8,9 @@ namespace Universidade.Domain.Entities
             Ativo = false;
             DataDeCriacao = DateTime.Now;
         }
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public bool Ativo { get; set; }
         public DateTime DataDeCriacao { get; set; }
-        public DateTime DataDeAlteracao { get; set; }
+        public DateTime? DataDeAlteracao { get; set; }
     }
 }

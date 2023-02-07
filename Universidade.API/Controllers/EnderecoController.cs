@@ -15,15 +15,33 @@ namespace Universidade.API.Controllers
             _enderecoRepository = enderecoRepository;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var enderecos = await _enderecoRepository.ListAsync();
             return Ok(enderecos);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync([FromRoute] int id)
+        {
+            var endereco = await _enderecoRepository.FindAsync(id);
+            return Ok(endereco);
+        }
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Endereco entity)
+        public async Task<IActionResult> PostAsync([FromBody] Endereco entity)
         {
             var id = await _enderecoRepository.AddAsync(entity);
+            return Ok(id);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAsync([FromBody] Endereco endereco, [FromRoute] int id)
+        {
+            await _enderecoRepository.AtualizarAsync(endereco, id);
+            return Ok(endereco);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DelAsync([FromRoute] int id)
+        {
+            await _enderecoRepository.DeleteAsync(id);
             return Ok(id);
         }
     }
