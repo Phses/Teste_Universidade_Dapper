@@ -2,12 +2,7 @@
 
 namespace Universidade.Domain.Interfaces.Repository
 {
-    public interface IEnderecoRepository
+    public interface IEnderecoRepository : IBaseRepository<Endereco>
     {
-        Task<Endereco> FindAsync(int id);
-        Task<IEnumerable<Endereco>> ListAsync();
-        Task<int> AddAsync(Endereco endereco);
-        Task AtualizarAsync(Endereco endereco, int id);
-        Task DeleteAsync(int id);
     }
 }

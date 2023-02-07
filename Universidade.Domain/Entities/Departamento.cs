@@ -6,5 +6,6 @@ namespace Universidade.Domain.Entities
     {
         public string Nome { get; set; }
         public int EnderecoId { get; set; }
+        public Endereco endereco { get; set; }
     }
 }
