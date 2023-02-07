@@ -20,6 +20,12 @@ namespace Universidade.Infrastructure.Repository
             return await _connection.QueryFirstOrDefaultAsync<Departamento>(sql, new { id });
         }
 
+        public async Task<Departamento> FindEnderecoAsync(int id)
+        {
+            var sql = "SELECT [Id], [Ativo], [DataDeCriacao], [DataDeAlteracao], [Nome], [EnderecoId], [Endereco] FROM [Departamentos] INNER JOIN Enderecos ON Departamento.EnderecoId = Endereco.Id WHERE [Departamento.Id]=@id";
+            return _connection.QueryFirstOrDefault<Departamento>(sql, new { id });
+        }
+
         public async Task<IEnumerable<Departamento>> ListAsync()
         {
             var sql = "SELECT [Id], [Ativo], [DataDeCriacao], [DataDeAlteracao], [Nome], [EnderecoId] FROM [Departamentos]";
