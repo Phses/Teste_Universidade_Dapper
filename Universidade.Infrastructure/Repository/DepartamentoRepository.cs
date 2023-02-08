@@ -20,10 +20,16 @@ namespace Universidade.Infrastructure.Repository
             return await _connection.QueryFirstOrDefaultAsync<Departamento>(sql, new { id });
         }
 
-        public async Task<Departamento> FindEnderecoAsync(int id)
+        public IEnumerable<Departamento> FindAllWithEndereco()
         {
-            var sql = "SELECT [Id], [Ativo], [DataDeCriacao], [DataDeAlteracao], [Nome], [EnderecoId], [Endereco] FROM [Departamentos] INNER JOIN Enderecos ON Departamento.EnderecoId = Endereco.Id WHERE [Departamento.Id]=@id";
-            return _connection.QueryFirstOrDefault<Departamento>(sql, new { id });
+            var sql = "SELECT dp.Id, dp.Ativo, dp.DataDeCriacao, dp.DataDeAlteracao, dp.Nome, dp.EnderecoId, e.Id, e.Ativo, e.DataDeCriacao, e.DataDeAlteracao, e.Rua, e.Cidade, e.Estado, e.Cep, e.Complemento FROM [Departamentos] as dp INNER JOIN [Enderecos] as e ON dp.EnderecoId = e.Id ";
+            return _connection.Query<Departamento, Endereco, Departamento>(sql, (p, e) => { p.endereco = e; return p; }, splitOn: "EnderecoId");
+        }
+
+        public Departamento FindWithEndereco(int id)
+        {
+            var sql = "SELECT dp.Id, dp.Ativo, dp.DataDeCriacao, dp.DataDeAlteracao, dp.Nome, dp.EnderecoId, e.Id, e.Ativo, e.DataDeCriacao, e.DataDeAlteracao, e.Rua, e.Cidade, e.Estado, e.Cep, e.Complemento  FROM Departamentos dp INNER JOIN Enderecos e ON dp.EnderecoId = e.Id WHERE dp.Id = @Id";
+            return _connection.Query<Departamento, Endereco, Departamento>(sql, (p, e) => { p.endereco = e; return p; }, new { id }, splitOn: "EnderecoId").FirstOrDefault();
         }
 
         public async Task<IEnumerable<Departamento>> ListAsync()
@@ -32,10 +38,18 @@ namespace Universidade.Infrastructure.Repository
             return await _connection.QueryAsync<Departamento>(sql);
         }
 
-        public async Task<int> AddAsync(Departamento Departamento)
+        public async Task<int> AddAsync(Departamento departamento)
         {
+            if(departamento.endereco is null)
+            {
+                var sqlDep = "INSERT INTO [Departamentos] VALUES(@Ativo, @DataDeCriacao, @DataDeAlteracao, @Nome, @EnderecoId);SELECT CAST(scope_identity() AS INT)";
+                return await _connection.ExecuteScalarAsync<int>(sqlDep, departamento);
+            }
+            var sqlEnd = "INSERT INTO [Enderecos] VALUES(@Ativo, @DataDeCriacao, @DataDeAlteracao, @Rua, @Cidade, @Estado, @Cep, @Complemento);SELECT CAST(scope_identity() AS INT)";
+            var enderecoId = await _connection.ExecuteScalarAsync<int>(sqlEnd, departamento.endereco);
+            departamento.EnderecoId = enderecoId;
             var sql = "INSERT INTO [Departamentos] VALUES(@Ativo, @DataDeCriacao, @DataDeAlteracao, @Nome, @EnderecoId);SELECT CAST(scope_identity() AS INT)";
-            return await _connection.ExecuteScalarAsync<int>(sql, Departamento);
+            return await _connection.ExecuteScalarAsync<int>(sql, departamento);
         }
 
         public async Task AtualizarAsync(Departamento Departamento, int id)

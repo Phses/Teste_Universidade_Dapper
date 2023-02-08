@@ -23,7 +23,13 @@ namespace Universidade.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync([FromRoute] int id)
         {
-            var Departamento = await _DepartamentoRepository.FindAsync(id);
+            var Departamento = _DepartamentoRepository.FindWithEndereco(id);
+            return Ok(Departamento);
+        }
+        [HttpGet("endereco")]
+        public async Task<IActionResult> GetEnderecoAsync()
+        {
+            var Departamento = _DepartamentoRepository.FindAllWithEndereco();
             return Ok(Departamento);
         }
         [HttpPost]
