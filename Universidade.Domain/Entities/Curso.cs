@@ -6,7 +6,7 @@ namespace Universidade.Domain.Entities
     {
         public string Nome { get; set; }
         public string Turno { get; set; }
-        public TipoCurso Tipo { get; set; }
+        public TipoCurso TipoCurso { get; set; }
 
         public int DepartamentoId { get; set; }
     }
